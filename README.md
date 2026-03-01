@@ -1,101 +1,63 @@
 # Ev's Dance
 
-**Ev's Dance** is a full-stack app that uses **Claude** (Opus, Sonnet, and Haiku) with model choice driven by the prompt you write. Built with **React**, **Python** (FastAPI), **PostgreSQL**, and **Redis** cache.
+An interactive dance studio adventure built with Next.js, GSAP, Framer Motion, and React Three Fiber.
 
-## Stack
+## Tech Stack
 
-- **Frontend:** React (Vite) + TypeScript
-- **Backend:** Python, FastAPI
-- **Database:** PostgreSQL
-- **Cache:** Redis (for Claude response caching)
-- **AI:** Anthropic Claude — choose **Opus** (most capable), **Sonnet** (balanced), or **Haiku** (fast) per request
+- **Next.js 16** (App Router) — Framework, routing, API routes, SSR/SSG
+- **GSAP** (+ ScrollTrigger, @gsap/react) — Animation timelines, parallax scrolling, dance sequencing
+- **Framer Motion** — Spring physics for character limbs, AnimatePresence transitions, layout animations
+- **React Three Fiber** + **drei** — Real 3D studio/store interiors with lighting, reflections, and camera
+- **Three.js** — 3D rendering engine (via R3F)
+- **Tailwind CSS** — Utility styles
+- **TypeScript** — Full type safety
 
-## Quick start
+## Features
 
-### 1. Backend (Python)
+- Scrollable city with neighborhood, storefronts, and dance studio
+- Draggable cars and characters with smooth physics
+- 10-house residential neighborhood
+- 7 themed store interiors (Burger, Coffee, Target, Hardware, Pharmacy, Pizza, Bakery)
+- Dance studio with 3D lobby, ballet studio, hip-hop studio
+- Pose-based character animation with GSAP timelines
+- Dance shop with product browsing, color/size selection, and shopping bag
+- Background music in studio rooms
 
-```bash
-cd backend
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env
-# Edit .env: set EVS_ANTHROPIC_API_KEY and DB/Redis if needed
-```
-
-Create the DB and run schema (optional, for storing prompts):
-
-```bash
-createdb evsdance
-psql -d evsdance -f schema.sql
-```
-
-Start the API:
+## Getting Started
 
 ```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-### 2. Redis
-
-Have Redis running locally (default: `localhost:6379`), or set `EVS_REDIS_HOST`, `EVS_REDIS_PORT`, etc. in `.env`.
-
-### 3. Frontend (React)
-
-If you see an `EPERM` error about the npm cache, fix it once (then run the commands below from **this project's** `frontend` folder):
-
-```bash
-sudo chown -R $(whoami) ~/.npm
-```
-
-Then start the Ev's Dance frontend from the **Ev's Dance** project:
-
-```bash
-cd /Users/buckafamily/evs-dance/frontend
 npm install
 npm run dev
 ```
 
-**Ev's Dance app URL:** **http://localhost:5180**
+Open [http://localhost:3000](http://localhost:3000).
 
-Open that URL in your browser. If another app appears, make sure you ran `npm run dev` from `evs-dance/frontend` (not another project). To reset: stop any other dev server (Ctrl+C in its terminal), then run the commands above again.
+## API Routes
 
-## Model selection
+- `GET /api/health` — Health check
+- `POST /api/claude/complete` — Claude AI completion (requires `EVS_ANTHROPIC_API_KEY`)
 
-In the UI you pick the model for each prompt:
+## Environment Variables
 
-- **Opus** — most capable; best for complex or nuanced tasks.
-- **Sonnet** — balanced speed and quality.
-- **Haiku** — fastest; good for simple or high-volume requests.
+Create a `.env.local` file:
 
-The backend maps these to current Anthropic model IDs (e.g. `claude-opus-4-6`, `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`). Responses are cached in Redis when `use_cache` is true.
+```env
+EVS_ANTHROPIC_API_KEY=your-key-here
+EVS_REDIS_HOST=localhost
+EVS_REDIS_PORT=6379
+EVS_REDIS_DB=0
+```
 
-## API
+## Project Structure
 
-- **POST /api/claude/complete**
-
-  Body:
-
-  ```json
-  {
-    "prompt": "Your prompt here",
-    "model": "opus",
-    "system_prompt": null,
-    "use_cache": true,
-    "max_tokens": 1024
-  }
-  ```
-
-  `model` must be one of: `opus`, `sonnet`, `haiku`.
-
-## Env (backend)
-
-| Variable | Description |
-|----------|-------------|
-| `EVS_ANTHROPIC_API_KEY` | Required. Anthropic API key. |
-| `EVS_POSTGRES_*` | Postgres connection (host, port, user, password, db). |
-| `EVS_REDIS_*` | Redis connection (host, port, db, optional password). |
-
-## License
-
-MIT
+```
+app/                    — Next.js App Router pages and API routes
+components/
+  city/                 — City scene, storefronts, neighborhood
+  vehicles/             — Car and minivan SVGs
+  characters/           — CartoonPerson (Framer Motion), Draggable
+  studio/               — Dance studio (R3F 3D), lobby, shop
+  store/                — Store interiors (R3F 3D)
+  ui/                   — Shared UI components
+lib/                    — Poses, GSAP dance timelines, hooks, API client
+```

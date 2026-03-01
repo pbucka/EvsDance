@@ -1,0 +1,531 @@
+/* ================================================================
+   Neighborhood — Residential houses west of the city
+   ================================================================ */
+
+.neighborhood-section {
+  left: 800px;
+  width: 3000px;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.neighborhood-section-hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Houses row */
+
+.neighborhood-houses {
+  top: 0;
+  height: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 28px;
+  padding: 0 40px;
+  flex-wrap: nowrap;
+}
+
+/* Neighborhood sign at the entrance (right side) */
+
+.neighborhood-entrance-sign {
+  position: absolute;
+  right: 30px;
+  bottom: 10px;
+  width: 120px;
+  height: 68px;
+  background: linear-gradient(180deg, #fef3c7, #fde68a);
+  border: 3px solid var(--color-stroke);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 2px 2px 0 var(--color-stroke);
+  z-index: 5;
+}
+
+.neighborhood-entrance-sign::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 20px;
+  background: var(--color-stroke);
+  border-radius: 2px;
+}
+
+.nh-sign-title {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 11px;
+  color: var(--color-stroke);
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.nh-sign-subtitle {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 8px;
+  color: #78350f;
+  margin-top: 2px;
+}
+
+/* Decorative trees between some houses */
+
+.nh-tree {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: flex-end;
+  margin-bottom: 2px;
+}
+
+.nh-tree-top {
+  width: 28px;
+  height: 34px;
+  background: radial-gradient(ellipse, #22c55e 40%, #15803d 100%);
+  border-radius: 50% 50% 40% 40%;
+  border: 2px solid var(--color-stroke);
+}
+
+.nh-tree-trunk {
+  width: 6px;
+  height: 14px;
+  background: #78350f;
+  border: 1px solid var(--color-stroke);
+  border-top: none;
+}
+
+/* ================================================================
+   INDIVIDUAL HOUSE
+   ================================================================ */
+
+.nh-house {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.nh-compound {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.nh-compound.garage-left {
+  flex-direction: row-reverse;
+}
+
+/* ================================================================
+   HOUSE BODY (main structure)
+   ================================================================ */
+
+.nh-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  border: 3px solid var(--color-stroke);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  padding-bottom: 6px;
+  overflow: visible;
+}
+
+/* Roof (triangle) */
+.nh-roof {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-color: transparent;
+}
+
+/* Chimney */
+.nh-chimney {
+  position: absolute;
+  bottom: calc(100% + 16px);
+  right: 20%;
+  width: 12px;
+  height: 22px;
+  border: 2px solid var(--color-stroke);
+  border-bottom: none;
+  border-radius: 2px 2px 0 0;
+  z-index: 1;
+}
+
+/* ================================================================
+   WINDOWS
+   ================================================================ */
+
+.nh-window-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 6px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.nh-window {
+  width: 26px;
+  height: 30px;
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  border: 2px solid var(--color-stroke);
+  border-radius: var(--radius-sm);
+  position: relative;
+}
+
+/* Window cross-bar */
+.nh-window::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-right: 1.5px solid rgba(0, 0, 0, 0.15);
+  border-bottom: 1.5px solid rgba(0, 0, 0, 0.15);
+  left: 48%;
+  top: 46%;
+}
+
+/* ================================================================
+   FRONT DOOR
+   ================================================================ */
+
+.nh-door {
+  width: 24px;
+  height: 36px;
+  border: 2px solid var(--color-stroke);
+  border-radius: 2px 2px 0 0;
+  margin-top: 2px;
+  position: relative;
+}
+
+.nh-doorknob {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  background: #fbbf24;
+  border: 1px solid var(--color-stroke);
+  border-radius: 50%;
+}
+
+/* Steps in front of door */
+.nh-steps {
+  width: 32px;
+  height: 6px;
+  background: #94a3b8;
+  border: 1px solid var(--color-stroke);
+  border-top: none;
+  border-radius: 0 0 2px 2px;
+}
+
+/* ================================================================
+   GARAGE
+   ================================================================ */
+
+.nh-garage-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nh-garage {
+  border: 3px solid var(--color-stroke);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  padding: 4px 4px 3px;
+  position: relative;
+}
+
+.nh-garage-roof {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  height: 8px;
+  border: 2px solid var(--color-stroke);
+  border-bottom: none;
+  border-radius: 2px 2px 0 0;
+}
+
+.nh-garage-door {
+  width: 28px;
+  height: 40px;
+  background: linear-gradient(180deg, #f1f5f9, #e2e8f0);
+  border: 2px solid var(--color-stroke);
+  border-radius: 2px;
+  position: relative;
+}
+
+/* Horizontal lines on garage door */
+.nh-garage-door::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  top: 33%;
+  height: 0;
+  border-top: 1px solid #94a3b8;
+  box-shadow: 0 8px 0 #94a3b8;
+}
+
+/* ================================================================
+   DRIVEWAY
+   ================================================================ */
+
+.nh-driveway {
+  height: 30px;
+  background: linear-gradient(180deg, #94a3b8, #9ca3af);
+  border-left: 2px solid var(--color-stroke);
+  border-right: 2px solid var(--color-stroke);
+  border-bottom: 2px solid var(--color-stroke);
+  border-radius: 0 0 2px 2px;
+  margin-top: -1px;
+  align-self: flex-end;
+}
+
+.nh-compound.garage-left .nh-driveway {
+  align-self: flex-start;
+}
+
+/* ================================================================
+   MAILBOX
+   ================================================================ */
+
+.nh-mailbox {
+  position: absolute;
+  bottom: -34px;
+  width: 10px;
+  height: 16px;
+  background: #3b82f6;
+  border: 1.5px solid var(--color-stroke);
+  border-radius: 2px 2px 0 0;
+  z-index: 2;
+}
+
+.nh-mailbox-left {
+  left: 8px;
+}
+
+.nh-mailbox-right {
+  right: 8px;
+}
+
+.nh-mailbox::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 12px;
+  background: var(--color-stroke);
+}
+
+/* ================================================================
+   LAWN / YARD ACCENTS
+   ================================================================ */
+
+.nh-bush {
+  position: absolute;
+  bottom: -8px;
+  width: 18px;
+  height: 12px;
+  background: radial-gradient(ellipse, #4ade80 40%, #16a34a 100%);
+  border: 1.5px solid var(--color-stroke);
+  border-radius: 50% 50% 40% 40%;
+}
+
+.nh-bush-left  { left: 4px; }
+.nh-bush-right { right: 4px; }
+
+/* Subtle lawn strip below each house */
+.nh-lawn {
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(180deg, #86efac, #4ade80);
+  border-bottom: 1px solid #16a34a;
+}
+
+/* ================================================================
+   SIZE VARIANTS
+   ================================================================ */
+
+/* Small house body sizes */
+.nh-body-small-1 { width: 140px; min-height: 100px; }
+.nh-body-small-2 { width: 140px; min-height: 160px; }
+
+/* Large house body sizes */
+.nh-body-large-1 { width: 200px; min-height: 120px; }
+.nh-body-large-2 { width: 200px; min-height: 200px; }
+
+/* Garage sizes */
+.nh-garage-2 { width: 66px; min-height: 52px; }
+.nh-garage-3 { width: 98px; min-height: 56px; }
+
+/* Driveway widths */
+.nh-driveway-2 { width: 72px; }
+.nh-driveway-3 { width: 104px; }
+
+/* ================================================================
+   Church — Woodridge
+   ================================================================ */
+
+.nh-church {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.nh-church-body {
+  position: relative;
+  width: 200px;
+  min-height: 180px;
+  background: #fefce8;
+  border: 2.5px solid var(--color-stroke);
+  border-radius: 4px 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 35px;
+  gap: 8px;
+}
+
+.nh-church-steeple {
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nh-church-cross {
+  width: 4px;
+  height: 18px;
+  background: #92400e;
+  border-radius: 2px;
+  position: relative;
+}
+
+.nh-church-cross::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 4px;
+  background: #92400e;
+  border-radius: 2px;
+}
+
+.nh-church-steeple-roof {
+  width: 0;
+  height: 0;
+  border-left: 24px solid transparent;
+  border-right: 24px solid transparent;
+  border-bottom: 40px solid #78350f;
+}
+
+.nh-church-roof {
+  position: absolute;
+  top: -6px;
+  left: -10px;
+  right: -10px;
+  height: 0;
+  border-left: 110px solid transparent;
+  border-right: 110px solid transparent;
+  border-bottom: 28px solid #78350f;
+}
+
+.nh-church-sign {
+  font-family: 'Georgia', serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #78350f;
+  letter-spacing: 0.04em;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.nh-church-window-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.nh-church-window-plain {
+  width: 24px;
+  height: 40px;
+  background: linear-gradient(180deg, #bfdbfe 0%, #93c5fd 100%);
+  border: 2px solid var(--color-stroke);
+  border-radius: 12px 12px 2px 2px;
+}
+
+.nh-church-doors {
+  display: flex;
+  gap: 2px;
+  margin-top: auto;
+}
+
+.nh-church-door {
+  width: 30px;
+  height: 50px;
+  background: linear-gradient(180deg, #92400e 0%, #78350f 100%);
+  border: 2px solid var(--color-stroke);
+  border-radius: 14px 14px 0 0;
+  position: relative;
+}
+
+.nh-church-door::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #d4a76a;
+  border: 1px solid var(--color-stroke);
+}
+
+.nh-church-door:first-child::after {
+  right: 4px;
+}
+
+.nh-church-door:last-child::after {
+  left: 4px;
+}
+
+.nh-church-steps {
+  width: 80px;
+  height: 10px;
+  background: #d1d5db;
+  border: 1.5px solid var(--color-stroke);
+  border-radius: 0 0 3px 3px;
+  margin-bottom: -2px;
+}

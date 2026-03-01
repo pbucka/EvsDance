@@ -4,5 +4,8 @@ venv/
 __pycache__/
 node_modules/
 dist/
+.next/
+_archive/
+tsconfig.tsbuildinfo
 *.log
 .DS_Store
