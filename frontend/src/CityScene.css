@@ -1,0 +1,946 @@
+/* ================================================================
+   Ev's Dance – City + Studio scene
+   ================================================================ */
+
+/* --- Viewport & world --- */
+
+.city-scene-viewport {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.studio-focus-viewport.city-scene-viewport {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 50%,
+    rgba(34, 197, 94, 0.15) 75%,
+    var(--color-grass-dark) 100%
+  );
+}
+
+.city-scene-world {
+  position: relative;
+  height: 100%;
+  transition: transform 0.25s ease-out;
+  will-change: transform;
+}
+
+/* --- Shared layer setup --- */
+
+.scene-layer {
+  position: absolute;
+  left: 0;
+  pointer-events: none;
+}
+
+.scene-layer.buildings,
+.scene-layer.studio-buildings-row,
+.studio-parking-lot,
+.minivan-draggable,
+.car-draggable,
+.person-draggable,
+.draggable {
+  pointer-events: auto;
+}
+
+/* ================================================================
+   SKY
+   ================================================================ */
+
+.sky {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 58%;
+  z-index: 0;
+}
+
+.evening-sky {
+  background: linear-gradient(
+    180deg,
+    var(--color-sky-top) 0%,
+    #2d1b4e 18%,
+    var(--color-sky-mid) 35%,
+    var(--color-sky-warm) 55%,
+    var(--color-sky-gold) 70%,
+    var(--color-sky-yellow) 85%,
+    var(--color-sky-light) 100%
+  );
+}
+
+.sun {
+  position: absolute;
+  top: 12%;
+  left: 72%;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(
+    circle at 30% 30%,
+    var(--color-sky-light),
+    var(--color-sky-yellow) 40%,
+    var(--color-sky-gold)
+  );
+  border-radius: 50%;
+  box-shadow: 0 0 80px 20px rgba(254, 249, 231, 0.5);
+}
+
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 50%;
+}
+
+.cloud-1 {
+  width: 70px;
+  height: 28px;
+  top: 18%;
+  left: 15%;
+  box-shadow:
+    12px 4px 0 0 rgba(255, 255, 255, 0.6),
+    24px 0 0 0 rgba(255, 255, 255, 0.5);
+}
+
+.cloud-2 {
+  width: 50px;
+  height: 22px;
+  top: 28%;
+  left: 45%;
+  box-shadow: 10px 2px 0 0 rgba(255, 255, 255, 0.6);
+}
+
+.cloud-3 {
+  width: 60px;
+  height: 24px;
+  top: 14%;
+  right: 20%;
+  left: auto;
+  box-shadow: 14px 4px 0 0 rgba(255, 255, 255, 0.55);
+}
+
+/* ================================================================
+   DISTANT HOUSES
+   ================================================================ */
+
+.distant-neighborhoods {
+  top: 28%;
+  left: 0;
+  width: 100%;
+  height: 42%;
+  z-index: 2;
+}
+
+.distant-houses {
+  position: absolute;
+  bottom: 0;
+  width: 320px;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 24px;
+  opacity: 0.65;
+}
+
+.distant-houses::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(45, 27, 78, 0.12) 70%);
+  pointer-events: none;
+}
+
+.dh-left   { left: 2%; }
+.dh-center { left: 50%; transform: translateX(-50%); }
+.dh-right  { right: 2%; left: auto; }
+
+.mini-house {
+  position: relative;
+  width: 38px;
+  height: 48px;
+  background: #4a3d6a;
+  border: 1px solid #2d2340;
+  flex-shrink: 0;
+}
+
+.mini-house::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 10px 22px 10px;
+  border-color: transparent transparent #3d2c5e transparent;
+}
+
+.studio-view .distant-neighborhoods {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* ================================================================
+   SECTIONS
+   ================================================================ */
+
+.scene-section {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 4;
+}
+
+/* City (center, shifted right by neighborhood width) */
+
+.city-section {
+  left: 3000px;
+  width: 1700px;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.city-section-hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Studio (right half, shifted right by neighborhood width) */
+
+.studio-section {
+  left: 4800px;
+  width: 1400px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 0;
+  padding-top: 0;
+}
+
+/* ================================================================
+   ROAD & SIDEWALK
+   ================================================================ */
+
+.road-full {
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 26%;
+  background: var(--color-road);
+  border-top: 5px solid var(--color-road-edge-light);
+  border-bottom: 5px solid var(--color-road-edge-dark);
+  z-index: 3;
+  transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.road-full::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 0;
+  border-top: 3px dashed var(--color-road-line);
+  opacity: 0.8;
+}
+
+.sidewalk-full {
+  left: 0;
+  right: 0;
+  top: 76%;
+  height: 24%;
+  background: linear-gradient(180deg, var(--color-grass-light) 0%, var(--color-grass) 100%);
+  z-index: 3;
+  transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.sidewalk-full-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ================================================================
+   CITY BUILDINGS (storefronts)
+   ================================================================ */
+
+.city-buildings {
+  top: 0;
+  height: 50%;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 24px;
+  flex-wrap: nowrap;
+}
+
+.building.storefront {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 160px;
+}
+
+.store-sign {
+  width: 100%;
+  min-height: 36px;
+  padding: 10px 12px;
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--color-stroke);
+  border-bottom: none;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.store-facade {
+  width: 100%;
+  min-height: 200px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 3px solid var(--color-stroke);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  background: #f8fafc;
+}
+
+.store-windows-top,
+.store-windows-mid,
+.store-door-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.store-window {
+  width: 42px;
+  height: 48px;
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  border: 2px solid var(--color-stroke);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.store-door {
+  width: 52px;
+  height: 72px;
+  background: linear-gradient(180deg, #92400e 0%, #78350f 100%);
+  border: 3px solid var(--color-stroke);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+/* Store color variants */
+.sign-burger   { background: #fef3c7; color: #b45309; }
+.sign-target   { background: #dc2626; color: #fff; }
+.sign-hardware { background: #1e293b; color: #fbbf24; }
+.sign-coffee   { background: #78350f; color: #fef3c7; }
+.sign-pharmacy { background: #0ea5e9; color: #fff; }
+.sign-pizza    { background: #dc2626; color: #fef08a; }
+.sign-bakery   { background: #fcd34d; color: #78350f; }
+
+.store-burger .store-facade   { background: #fffbeb; }
+.store-target .store-facade   { background: #fef2f2; }
+.store-hardware .store-facade { background: #f1f5f9; }
+.store-coffee .store-facade   { background: #fef3c7; }
+.store-pharmacy .store-facade { background: #f0f9ff; }
+.store-pizza .store-facade    { background: #fef2f2; }
+.store-bakery .store-facade   { background: #fffbeb; }
+
+/* ================================================================
+   DANCE STUDIO
+   ================================================================ */
+
+.studio-buildings-row {
+  top: 0;
+  height: 100%;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+}
+
+.studio-section .dance-studio {
+  transform: scale(1);
+}
+
+.studio-section-zoomed .dance-studio {
+  transform: scale(1);
+}
+
+.roof-studio-black {
+  width: 100%;
+  height: 0;
+  border-style: solid;
+  border-width: 0 40px 60px 40px;
+  border-color: transparent transparent var(--color-stroke) transparent;
+  margin-bottom: -2px;
+}
+
+.dance-studio .facade {
+  width: 720px;
+  min-height: 440px;
+  background: #fff;
+  border: 4px solid var(--color-stroke);
+  box-shadow: var(--shadow-md);
+}
+
+.studio-facade {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.studio-sign {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 32px;
+  color: var(--color-stroke);
+  letter-spacing: 0.05em;
+  padding: 16px 28px;
+  background: #f8fafc;
+  border: 3px solid var(--color-stroke);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+
+.studio-windows-row {
+  display: flex;
+  gap: 28px;
+  margin-bottom: 24px;
+}
+
+.studio-window {
+  width: 160px;
+  height: 100px;
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  border: 3px solid var(--color-stroke);
+  border-radius: 6px;
+}
+
+.studio-doors-container {
+  position: relative;
+  width: 180px;
+  height: 100px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  outline: none;
+  perspective: 200px;
+  z-index: 1;
+}
+
+.studio-doors-container:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.studio-door {
+  position: absolute;
+  bottom: 0;
+  width: 86px;
+  height: 96px;
+  background: #78350f;
+  border: 2px solid var(--color-stroke);
+  border-radius: var(--radius-sm);
+  transition: transform 0.4s ease;
+  backface-visibility: visible;
+}
+
+.studio-door-left {
+  left: 2px;
+  border-right: 1px solid #92400e;
+  transform-origin: left bottom;
+}
+
+.studio-door-right {
+  right: 2px;
+  border-left: 1px solid #92400e;
+  transform-origin: right bottom;
+}
+
+.studio-door-left.open  { transform: rotateY(-72deg); }
+.studio-door-right.open { transform: rotateY(72deg); }
+
+.studio-doorway {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 170px;
+  height: 96px;
+  background: #374151;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ================================================================
+   PARKING LOT
+   ================================================================ */
+
+.studio-section .studio-parking-lot {
+  position: relative;
+  left: auto;
+  right: auto;
+  margin-top: 0;
+  flex-shrink: 0;
+  order: 1;
+  width: 450px;
+  height: 260px;
+  margin-right: 0;
+}
+
+.studio-parking-lot {
+  flex: 0 0 auto;
+  order: 1;
+  width: 450px;
+  min-width: 400px;
+  min-height: 220px;
+  height: 260px;
+  border: 4px solid #475569;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, var(--color-road) 0%, var(--color-road-edge-dark) 100%);
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.studio-parking-label {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 14px;
+  color: #f1f5f9;
+  letter-spacing: 0.04em;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.parking-spots-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 0;
+  width: 100%;
+  flex: 1;
+  padding: 8px 10px 12px;
+  box-sizing: border-box;
+}
+
+.parking-spot {
+  position: relative;
+  background: transparent;
+  border-bottom: 3px solid #eab308;
+  border-right: 3px solid #eab308;
+  min-height: 50px;
+}
+
+.parking-spot:nth-child(4n + 1) { border-left: 3px solid #eab308; }
+.parking-spot:nth-child(-n + 4) { border-top: 3px solid #eab308; }
+
+.studio-parking-cars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.parking-car {
+  position: absolute;
+  transform: scale(0.9);
+  pointer-events: none;
+}
+
+/* Road from main road into parking lot */
+
+.studio-road-into-lot {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.studio-road-into-lot::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-road);
+  border-top: 5px solid var(--color-road-edge-light);
+  border-bottom: 5px solid var(--color-road-edge-dark);
+  clip-path: polygon(25% 0, 75% 0, 65% 100%, 0 100%, 0 85%, 15% 70%);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.08);
+}
+
+.studio-road-into-lot::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 25%;
+  width: 50%;
+  height: 30%;
+  border-top: 3px dashed var(--color-road-line);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* Sidewalk path (hidden by default, shown in focus mode) */
+
+.studio-sidewalk-path {
+  display: none;
+}
+
+/* ================================================================
+   STUDIO BUILDING BLOCK
+   ================================================================ */
+
+.studio-building-block {
+  flex-shrink: 0;
+  min-width: 280px;
+  min-height: 300px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  order: 3;
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  max-width: 850px;
+}
+
+/* ================================================================
+   FOCUS MODE (van at studio)
+   ================================================================ */
+
+.studio-focus-mode.studio-section {
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow: visible;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(34, 197, 94, 0.2) 60%,
+    var(--color-grass-dark) 100%
+  );
+}
+
+.studio-focus-mode .studio-parking-lot {
+  position: absolute;
+  bottom: 4%;
+  left: 2%;
+  width: 42%;
+  min-width: 360px;
+  height: 36%;
+  min-height: 200px;
+  margin: 0;
+  order: 1;
+  z-index: 6;
+  flex: none;
+}
+
+.studio-focus-mode .studio-building-block {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 42%;
+  left: 20%;
+  margin: 0;
+  order: 2;
+  z-index: 10;
+  flex: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.studio-focus-mode .dance-studio {
+  transform: scale(1);
+  transform-origin: center bottom;
+  transition: transform 0.3s ease-out;
+}
+
+.studio-focus-mode .studio-buildings-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.studio-focus-mode .studio-sidewalk-path {
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.studio-focus-mode .studio-sidewalk-path::before,
+.studio-focus-mode .studio-sidewalk-path::after {
+  content: '';
+  position: absolute;
+  background: linear-gradient(180deg, #d1fae5 0%, var(--color-grass-light) 100%);
+  border: 2px solid #059669;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.studio-focus-mode .studio-sidewalk-path::before {
+  left: 22%;
+  bottom: 38%;
+  width: 55%;
+  height: 14px;
+}
+
+.studio-focus-mode .studio-sidewalk-path::after {
+  left: 22%;
+  bottom: 38%;
+  width: 14px;
+  height: 48%;
+}
+
+/* ================================================================
+   TRANSITIONS
+   ================================================================ */
+
+.studio-focus-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.studio-focus-transition-text {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  padding: 16px 32px;
+  background: rgba(30, 41, 59, 0.85);
+  border-radius: var(--radius-lg);
+  border: 3px solid #fef08a;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Studio transition */
+.studio-focus-transition-in {
+  animation: overlay-fade-in 0.35s ease-out forwards;
+}
+.studio-focus-transition-in .studio-focus-transition-text {
+  animation: text-pop-in 0.35s ease-out 0.1s both;
+}
+.studio-focus-transition-hold {
+  opacity: 1;
+}
+.studio-focus-transition-hold .studio-focus-transition-text {
+  opacity: 1;
+}
+.studio-focus-transition-out {
+  animation: overlay-fade-out 0.5s ease-out forwards;
+}
+.studio-focus-transition-out .studio-focus-transition-text {
+  animation: text-fade-out 0.4s ease-out forwards;
+}
+.studio-focus-transition-idle {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* City transition */
+.city-transition-in {
+  animation: overlay-fade-in 0.35s ease-out forwards;
+}
+.city-transition-in .studio-focus-transition-text {
+  animation: text-pop-in 0.35s ease-out 0.1s both;
+}
+.city-transition-hold {
+  opacity: 1;
+}
+.city-transition-hold .studio-focus-transition-text {
+  opacity: 1;
+}
+.city-transition-out {
+  animation: overlay-fade-out 0.5s ease-out forwards;
+}
+.city-transition-out .studio-focus-transition-text {
+  animation: text-fade-out 0.4s ease-out forwards;
+}
+.city-transition-idle {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes overlay-fade-in {
+  from { opacity: 0; background: rgba(0, 0, 0, 0); }
+  to   { opacity: 1; background: rgba(0, 0, 0, 0.2); }
+}
+
+@keyframes overlay-fade-out {
+  from { opacity: 1; background: rgba(0, 0, 0, 0.2); }
+  to   { opacity: 0; background: rgba(0, 0, 0, 0); visibility: hidden; }
+}
+
+@keyframes text-pop-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes text-fade-out {
+  to { opacity: 0; }
+}
+
+/* ================================================================
+   DRAGGABLES
+   ================================================================ */
+
+.draggable {
+  touch-action: none;
+  z-index: 10;
+}
+
+.draggable:active {
+  z-index: 20;
+}
+
+.cartoon-person,
+.cartoon-car,
+.minivan-with-family {
+  filter: drop-shadow(2px 2px 0 var(--color-stroke));
+}
+
+.minivan-with-family { transform: scale(1.55); }
+.cartoon-car          { transform: scale(1.5); }
+.cartoon-person       { transform: scale(1.2); }
+
+.minivan-draggable { z-index: 12; }
+.car-draggable     { z-index: 11; }
+.person-draggable  { z-index: 13; }
+.minivan-wrapper   { z-index: 12; }
+
+.van-get-out-btn {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -100%);
+  margin-top: -6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-stroke);
+  background: #fef08a;
+  border: 2px solid var(--color-stroke);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 2px 2px 0 var(--color-stroke);
+  z-index: 20;
+  transition: background 0.12s;
+}
+
+.van-get-out-btn:hover {
+  background: #fde047;
+}
+
+.van-get-in-btn {
+  background: #bbf7d0;
+}
+
+.van-get-in-btn:hover {
+  background: #86efac;
+}
+
+/* ================================================================
+   ENTER STUDIO BUTTON & TRANSITION
+   ================================================================ */
+
+.enter-studio-btn {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  padding: 14px 32px;
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  border: 3px solid #fff;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4), 0 0 0 4px rgba(124, 58, 237, 0.15);
+  animation: enter-btn-pulse 1.5s ease-in-out infinite;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.enter-studio-btn:hover {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 6px 28px rgba(124, 58, 237, 0.5), 0 0 0 6px rgba(124, 58, 237, 0.2);
+}
+
+.enter-store-btn {
+  bottom: 80px;
+  background: linear-gradient(135deg, #dc2626 0%, #f59e0b 100%);
+  box-shadow: 0 4px 20px rgba(220, 38, 38, 0.4), 0 0 0 4px rgba(220, 38, 38, 0.15);
+}
+
+.enter-store-btn:hover {
+  box-shadow: 0 6px 28px rgba(220, 38, 38, 0.5), 0 0 0 6px rgba(220, 38, 38, 0.2);
+}
+
+@keyframes enter-btn-pulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4), 0 0 0 4px rgba(124, 58, 237, 0.15); }
+  50%      { box-shadow: 0 4px 20px rgba(124, 58, 237, 0.6), 0 0 0 8px rgba(124, 58, 237, 0.1); }
+}
+
+.enter-studio-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: enter-transition-zoom 0.6s ease-in forwards;
+  pointer-events: none;
+}
+
+@keyframes enter-transition-zoom {
+  0%   { background: rgba(124, 58, 237, 0); }
+  50%  { background: rgba(124, 58, 237, 0.8); }
+  100% { background: rgba(124, 58, 237, 1); }
+}
